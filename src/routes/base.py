@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-import os
+from fastapi import APIRouter, Depends
+from helpers.configurations import get_settings, Settings
 
 
 base_router = APIRouter(
@@ -8,10 +8,10 @@ base_router = APIRouter(
 )
 
 @base_router.get("/")
-async def welcome():
+async def welcome(app_settings: Settings = Depends(get_settings)):
 
-    app_name = os.getenv('APP_NAME')
-    app_version = os.getenv('APP_VERSION')
+    app_name = app_settings.APP_NAME
+    app_version = app_settings.APP_VERSION
 
 
     return {
