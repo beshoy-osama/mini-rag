@@ -4,3 +4,8 @@ python-multipart==0.0.32
 python-dotenv==1.2.2
 pydantic-settings==2.15.0
 aiofiles==25.1.0
+
+langchain==0.3.20
+langchain-core==0.3.43
+langchain-community==0.3.19
+langchain-text-splitters==0.3.6
