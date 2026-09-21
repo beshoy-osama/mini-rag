@@ -3,8 +3,6 @@ from .db_schemes.data_chunk import DataChunk
 from .enums.DataBaseEnums import DataBaseEnums
 from bson.objectid import ObjectId
 
-from models.db_schemes import data_chunk
-
 class ChunkModel(BaseDataModel):
 
     def __init__(self, db_client: object):

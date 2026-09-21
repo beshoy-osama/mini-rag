@@ -21,7 +21,7 @@ class Project(BaseModel):
             IndexModel(
                 [('project_id', ASCENDING)],
                 unique=True,
-                name='project_id_unique',
+                name='project_id_index',
             )
         ]
 
