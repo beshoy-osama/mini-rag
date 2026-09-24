@@ -4,7 +4,6 @@ class Settings(BaseSettings):
 
     APP_NAME: str 
     APP_VERSION: str
-    OPENAI_API_KEY: str
 
     FILE_ALLOWED_TYPES: list
     FILE_MAX_SIZE: int
@@ -12,6 +11,26 @@ class Settings(BaseSettings):
 
     MONGO_URL: str
     MONGODB_DATABASE: str
+
+    GENERATION_BACKEND: str
+    EMBEDDING_BACKEND: str
+
+    OPENAI_API_KEY: str 
+    OPENAI_API_URL: str 
+    COHERE_API_KEY: str 
+
+    GENERATION_MODEL_ID: str 
+    EMBEDDING_MODEL_ID: str 
+    EMBEDDING_MODEL_SIZE: int 
+    INPUT_DAFAULT_MAX_CHARACTERS: int 
+    GENERATION_DAFAULT_MAX_TOKENS: int 
+    GENERATION_DAFAULT_TEMPERATURE: float 
+
+    VectorDBBackend : str
+    VectorDB_path : str
+    VectorDB_DistanceMethod : str = None
+
+
     
 
     model_config = SettingsConfigDict(

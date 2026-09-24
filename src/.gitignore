@@ -221,5 +221,3 @@ __marimo__/
 .streamlit/secrets.toml
 
 .vscode
-
-.src/assets
