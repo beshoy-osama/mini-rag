@@ -1,9 +1,7 @@
-from urllib import response
-
 from ..LLMInterface import LLMInterface
 from ..LLMEnums import OPENAIEnums
 
-from openai import OpenAI, responses
+from openai import OpenAI
 
 import logging
 
@@ -28,7 +26,7 @@ class OPENAIProvider(LLMInterface):
 
         self.client = OpenAI(
             api_key = self.api_key,
-            api_url = self.api_url
+            base_url = self.api_url
         )
 
         self.logger = logging.getLogger(__name__)
@@ -44,7 +42,7 @@ class OPENAIProvider(LLMInterface):
     def process_text(self, input_text: str):
         return input_text[:self.default_input_max_characters].strip()
 
-    def generate_text(self, prompt: str, chat_history: list =[], 
+    def generate_text(self, prompt: str, chat_history: list = [], 
                             max_output_tokens: int=None,
                             temperature: float=None):
             
@@ -56,15 +54,9 @@ class OPENAIProvider(LLMInterface):
                 self.logger.error("Generation model ID is not set. Please set it using set_generation_model().")
                 return None
 
-            if not max_output_tokens: 
-                max_output_tokens = self.default_generation_max_output_tokens
-            else:
-                max_output_tokens = max_output_tokens
+            max_output_tokens = max_output_tokens if max_output_tokens is not None else self.default_generation_max_output_tokens
 
-            if not temperature:
-                temperature = self.default_generation_temperature
-            else:
-                temperature = temperature
+            temperature = temperature if temperature is not None else self.default_generation_temperature
 
             chat_history.append(
                 self.construct_prompt(prompt=prompt, role=OPENAIEnums.USER.value)
@@ -84,15 +76,6 @@ class OPENAIProvider(LLMInterface):
 
             return response.choices[0].message.content
 
-    #     response = self.client.chat.completions.create(
-    #         model=self.generation_model_id,
-    #         messages=[{"role": "user", "content": prompt}],
-    #         max_tokens=max_output_tokens,
-    #         temperature=temperature
-    #     )
-
-    #     return response.choices[0].message.content.strip()
-
 
     def embed_text(self, text: str, document_type: str = None):
 
@@ -102,6 +85,10 @@ class OPENAIProvider(LLMInterface):
 
         if self.embedding_model_id is None:
             self.logger.error("Embedding model ID is not set. Please set it using set_embedding_model().")
+            return None
+
+        if not text or not text.strip():
+            self.logger.error("Text parameter cannot be empty.")
             return None
 
         response = self.client.embeddings.create(

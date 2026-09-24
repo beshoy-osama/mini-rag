@@ -1,13 +1,27 @@
 from enum import Enum
-from xmlrpc.client import SYSTEM_ERROR
 
 class LLMEnums(Enum):
 
-    openai = "OPENAI"
-    cohere = "COHERE"
+    OPENAI = "openai"
+    COHERE = "cohere"
 
 class OPENAIEnums(Enum):
 
     SYSTEM = "system"
     USER = "user"
     ASSISTANT = "assistant"
+
+class COHEREEnums(Enum):
+
+    SYSTEM = "SYSTEM"
+    USER = "USER"
+    ASSISTANT = "CHATBOT"
+
+    DOCUMENT = "search_document"
+    QUERY = "search_query"
+
+class DocumentTypeEnums(Enum):
+
+    DOCUMENT = "document"
+    QUERY = "query"
+
