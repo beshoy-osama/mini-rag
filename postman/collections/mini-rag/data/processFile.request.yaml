@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{url}}/api/v1/data/process/1"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \        \"chunk_size\": 200,\r
+
+    \        \"overlap_size\": 20,\r
+
+    \        \"do_reset\" : 1\r
+
+    }"
+order: 3561623601075740

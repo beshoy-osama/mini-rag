@@ -87,7 +87,7 @@ class QdrantDBProvider(VectorDBInterface):
             self.logger.error(f"Collection {collection_name} does not exist.")
             return False
 
-        point_id = record_id if record_id is not None else str(uuid.uuid4())
+        record_id = record_id if record_id is not None else str(uuid.uuid4())
 
         # Prepare Payload
         payload = {}
@@ -102,7 +102,7 @@ class QdrantDBProvider(VectorDBInterface):
                 collection_name=collection_name,
                 points=[
                     models.PointStruct(
-                        id=point_id,
+                        id=[record_id],
                         vector=vector,
                         payload=payload,
                     )

@@ -4,8 +4,15 @@ class LLMEnums(Enum):
 
     OPENAI = "openai"
     COHERE = "cohere"
+    GEMINI = "gemini"
 
 class OPENAIEnums(Enum):
+
+    SYSTEM = "system"
+    USER = "user"
+    ASSISTANT = "assistant"
+
+class GEMINIEnums(Enum):
 
     SYSTEM = "system"
     USER = "user"

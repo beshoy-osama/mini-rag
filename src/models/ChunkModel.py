@@ -66,6 +66,19 @@ class ChunkModel(BaseDataModel):
 
         return result.deleted_count
 
+    async def get_chunks_by_project_id(self, project_id: ObjectId, page_no: int = 1, page_size: int = 20):
+        """Get all chunks associated with a specific project ID."""
+
+        chunks_cursor = await self.collection.find({
+            "chunk_project_id" : project_id
+        }).skip((page_no - 1) * page_size
+                ).limit(page_size).to_list(length=None)
+
+        chunks = []
+        for chunk in chunks_cursor:
+            chunks.append(DataChunk(**chunk))
+
+        return chunks
     
 
 

@@ -1,6 +1,6 @@
-from .providers import OPENAIProvider, COHEREProvider
+from .providers import OPENAIProvider, COHEREProvider, GEMINIProvider
 from .LLMEnums import LLMEnums
-from ...helpers.configurations import Settings
+from helpers.configurations import Settings
 
 
 class LLMProviderFactory:
@@ -37,6 +37,14 @@ class LLMProviderFactory:
             elif provider_name == LLMEnums.COHERE.value:
                 return COHEREProvider(
                     api_key = self.configuration.COHERE_API_KEY,
+                    default_input_max_characters=self.configuration.INPUT_DAFAULT_MAX_CHARACTERS,
+                    default_generation_max_output_tokens=self.configuration.GENERATION_DAFAULT_MAX_TOKENS,
+                    default_generation_temperature=self.configuration.GENERATION_DAFAULT_TEMPERATURE
+                )
+
+            elif provider_name == LLMEnums.GEMINI.value:
+                return GEMINIProvider(
+                    api_key = self.configuration.GEMINI_API_KEY,
                     default_input_max_characters=self.configuration.INPUT_DAFAULT_MAX_CHARACTERS,
                     default_generation_max_output_tokens=self.configuration.GENERATION_DAFAULT_MAX_TOKENS,
                     default_generation_temperature=self.configuration.GENERATION_DAFAULT_TEMPERATURE

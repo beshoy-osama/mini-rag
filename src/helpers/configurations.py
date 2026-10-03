@@ -17,7 +17,10 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: str 
     OPENAI_API_URL: str 
-    COHERE_API_KEY: str 
+
+    COHERE_API_KEY: str
+
+    GEMINI_API_KEY: str 
 
     GENERATION_MODEL_ID: str 
     EMBEDDING_MODEL_ID: str 
@@ -26,7 +29,7 @@ class Settings(BaseSettings):
     GENERATION_DAFAULT_MAX_TOKENS: int 
     GENERATION_DAFAULT_TEMPERATURE: float 
 
-    VectorDBBackend : str
+    VectorDB_Backend : str
     VectorDB_path : str
     VectorDB_DistanceMethod : str = None
 

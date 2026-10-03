@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{url}}/api/v1/nlp/index/search/1"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"query\": \"what is Tesla's Next Frontier?\",\r
+
+    \    \"top_k\": 2\r
+
+    }"
+order: 2489040861598802

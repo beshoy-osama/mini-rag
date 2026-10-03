@@ -13,3 +13,13 @@ class ResponseSignal(Enum):
     
     NO_FILES_ERROR = "not_found_files"
     FILE_ID_ERROR = "no_file_found_with_this_id"
+
+    PROJECT_NOT_FOUND_ERROR = "project_not_found"
+    CHUNKS_NOT_FOUND_ERROR = "chunks_not_found"
+    INDEXING_INTO_VECTORDB_FAILED_ERROR = "indexing_failed"
+    INDEXING_INTO_VECTORDB_SUCCESS = "indexing_success"
+
+    GETTING_VECTORDB_COLLECTION_INFO_SUCCESS = "getting_vectorDB_collection_info_success"
+
+    SEARCH_VECTORDB_COLLECTION_SUCCESS = "search_vectorDB_collection_success"
+    SEARCH_VECTORDB_COLLECTION_FAILED = "search_vectorDB_collection_failed"

@@ -68,7 +68,6 @@ class COHEREProvider(LLMInterface):
                 self.logger.error("Error while generating text with COHERE")
                 return None    
             
-            # return response.message.content[0].text
             for content_item in response.message.content:
                 if content_item.type == "text":
                     return content_item.text
