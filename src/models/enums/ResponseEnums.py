@@ -23,3 +23,6 @@ class ResponseSignal(Enum):
 
     SEARCH_VECTORDB_COLLECTION_SUCCESS = "search_vectorDB_collection_success"
     SEARCH_VECTORDB_COLLECTION_FAILED = "search_vectorDB_collection_failed"
+
+    RAG_ANSWER_SUCCESS = "rag_answer_success"
+    RAG_ANSWER_FAILED = "rag_answer_failed"

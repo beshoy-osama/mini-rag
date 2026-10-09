@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from stores.llm import LLMProviderFactory
 from helpers.configurations import get_settings
 from stores.vectordb import VectorDBProvider
+from stores.llm.templates import TemplateParser
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,7 +26,13 @@ async def lifespan(app: FastAPI):
     app.state.vectordb_provider_factory = VectorDBProvider(
             configuration=settings
         )
-    
+
+    # Initialize Template Parser
+    app.state.template_parser = TemplateParser(
+        language=settings.ENGLISH_LANGUAGE,
+        default_language=settings.DEFAULT_LANGUAGE
+    )
+
 
     # generation client
     app.state.generation_client = app.state.llm_provider_factory.get_llm_provider(provider_name=settings.GENERATION_BACKEND)
@@ -37,7 +44,7 @@ async def lifespan(app: FastAPI):
                                             embedding_size=settings.EMBEDDING_MODEL_SIZE)
 
     # vectorDB client
-    app.state.vectorDB_client = app.state.vectordb_provider_factory.get_vectorDB_provider(provider_name=settings.VectorDB_Backend)
+    app.state.vectorDB_client = app.state.vectordb_provider_factory.get_vectorDB_provider(provider_name=settings.VECTORDB_BACKEND)
     app.state.vectorDB_client.connect()
 
     yield

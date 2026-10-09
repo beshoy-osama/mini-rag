@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{url}}/api/v1/nlp/index/answer/1"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"query\": \"what are the dual aspects compared when discussing 'The Environmental Impact of Tesla'?\",\r
+
+    \    \"top_k\": 2\r
+
+    }"
+order: 3441637217204043

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
-from qdrant_client.models import ScoredPoint
+
+from models.db_schemes import RetrievalDocuments
 
 class VectorDBInterface(ABC):
 
@@ -45,5 +46,5 @@ class VectorDBInterface(ABC):
 
     @abstractmethod
     def search_by_vector(self, collection_name: str, query_vector: List[float], 
-                    top_k: int = 10) -> List[ScoredPoint] | None:
+                    top_k: int = 10) -> List[RetrievalDocuments]:
         pass

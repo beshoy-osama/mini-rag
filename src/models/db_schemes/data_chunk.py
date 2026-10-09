@@ -11,6 +11,8 @@ class DataChunk(BaseModel):
     chunk_project_id: ObjectId
     chunk_asset_id: ObjectId
 
+    class Config:
+        arbitrary_types_allowed = True
 
     @classmethod
     def get_indexes(cls):
@@ -22,5 +24,7 @@ class DataChunk(BaseModel):
             )
         ]
 
-    class Config:
-        arbitrary_types_allowed = True
+class RetrievalDocuments(BaseModel):
+    text: str
+    score: float
+    metadata: dict = Field(default_factory=dict)

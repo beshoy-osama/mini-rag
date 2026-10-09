@@ -16,13 +16,13 @@ class GEMINIEnums(Enum):
 
     SYSTEM = "system"
     USER = "user"
-    ASSISTANT = "assistant"
+    ASSISTANT = "model"
 
 class COHEREEnums(Enum):
 
-    SYSTEM = "SYSTEM"
-    USER = "USER"
-    ASSISTANT = "CHATBOT"
+    SYSTEM = "system"
+    USER = "user"
+    ASSISTANT = "assistant"
 
     DOCUMENT = "search_document"
     QUERY = "search_query"
@@ -31,4 +31,3 @@ class DocumentTypeEnums(Enum):
 
     DOCUMENT = "document"
     QUERY = "query"
-

@@ -27,6 +27,7 @@ class GEMINIProvider(LLMInterface):
                 self.client = genai.Client(
                     api_key=self.api_key)
 
+                self.enums = GEMINIEnums
                 self.logger = logging.getLogger(__name__)
 
 
@@ -42,40 +43,48 @@ class GEMINIProvider(LLMInterface):
                 return input_text[:self.default_input_max_characters].strip()
 
 
-    def generate_text(self, prompt: str, chat_history: list = [] , 
-                    max_output_tokens: int=None,
-                    temperature: float=None):
 
-            if not self.client:
-                self.logger.error("GEMINI client is not initialized. Please check your API key.")
-                return None
+    def generate_text(self, user_prompt: str, system_prompt: str = None,
+                    chat_history: list = None,
+                    max_output_tokens: int = None,
+                    temperature: float = None):
 
-            if not self.generation_model_id:
-                self.logger.error("Generation model ID is not set. Please set it using set_generation_model().")
-                return None
+        if not self.client:
+            self.logger.error("GEMINI client is not initialized. Please check your API key.")
+            return None
+
+        if not self.generation_model_id:
+            self.logger.error("Generation model ID is not set. Please set it using set_generation_model().")
+            return None
+
+        max_output_tokens = max_output_tokens if max_output_tokens is not None else self.default_generation_max_output_tokens
+        temperature = temperature if temperature is not None else self.default_generation_temperature
+        
+        # i can add chat history to the prompt if needed, but for now, I will just use the user prompt and system prompt
+
+        try:
             
-            max_output_tokens = max_output_tokens if max_output_tokens is not None else self.default_generation_max_output_tokens
-
-            temperature = temperature if temperature is not None else self.default_generation_temperature
-
-            chat_history.append(
-                self.construct_prompt(prompt=prompt, role=GEMINIEnums.USER.value)
+            chat = self.client.chats.create(
+                model=self.generation_model_id,
+                history=list(chat_history or []),
+                config=types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    max_output_tokens=max_output_tokens,
+                    temperature=temperature
+                )
             )
 
-            response = self.client.models.generate_content(
-                    model=self.generation_model_id,
-                    contents=chat_history,
-                    config=types.GenerateContentConfig(
-                        max_output_tokens=max_output_tokens,
-                        temperature=temperature
-                    )
-            )
+            response = chat.send_message(user_prompt.strip())
 
             if not response or not response.text:
-                self.logger.error("Error while generating text with GEMINI")
+                self.logger.error("Error while generating text with GEMINI: Empty response")
                 return None    
             
             return response.text
+
+        except Exception as e:
+            self.logger.error(f"GEMINI API Error: {str(e)}")
+            return None
 
 
     def embed_text(self, text: str, document_type: str = None):
@@ -111,5 +120,5 @@ class GEMINIProvider(LLMInterface):
 
         return {
             'role' : role,
-            'parts' : [{'text': self.process_text(input_text=prompt)}]
+            'parts' : [{'text': prompt.strip()}]
         }

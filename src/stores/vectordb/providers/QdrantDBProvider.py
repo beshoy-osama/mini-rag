@@ -4,6 +4,8 @@ from ..VectorDBEnums import DistanceMethod
 from qdrant_client import QdrantClient, models
 from qdrant_client.models import ScoredPoint
 
+from models.db_schemes import RetrievalDocuments
+
 import logging
 
 import uuid
@@ -49,8 +51,8 @@ class QdrantDBProvider(VectorDBInterface):
     def get_collection_info(self, collection_name: str) -> dict:
         return self.client.get_collection(collection_name=collection_name)
 
-    def create_collection(self, collection_name: str, 
-                        embedding_size: int = 384, do_reset: bool = False):
+    def create_collection(self, collection_name: str,
+                        embedding_size: int, do_reset: bool = False):
 
             if do_reset == 1:
                 self.delete_collection(collection_name=collection_name)
@@ -166,11 +168,12 @@ class QdrantDBProvider(VectorDBInterface):
         return True
 
 
-    def search_by_vector(self, collection_name: str, query_vector: List[float], top_k: int = 5) -> List[ScoredPoint] | None:
+
+    def search_by_vector(self, collection_name: str, query_vector: List[float], top_k: int = 5) -> List[RetrievalDocuments]:
 
         if not self.is_collection_exist(collection_name=collection_name):
             self.logger.error(f"Collection '{collection_name}' does not exist.")
-            return None
+            return []
 
         self.logger.info(
             f"Searching in collection '{collection_name}' for top {top_k} similar vectors."
@@ -184,10 +187,29 @@ class QdrantDBProvider(VectorDBInterface):
                 with_payload=True, 
                 with_vectors=False,
             )
-            return response.points
+
+            if not response or not response.points:
+                self.logger.info(f"No results found in collection '{collection_name}'.")
+                return []
+
+            results = []
+            for point in response.points:
+                payload = point.payload or {}
+                text = payload.get("text", "")
+                score = point.score
+                metadata = payload.get("metadata", {})
+                results.append(
+                    RetrievalDocuments(
+                        text=text,
+                        score=score,
+                        metadata=metadata if isinstance(metadata, dict) else {}
+                    )
+                )
+
+            return results
 
         except Exception as e:
             self.logger.error(
                 f"Vector search failed in collection '{collection_name}': {e}"
             )
-            return None
+            return []

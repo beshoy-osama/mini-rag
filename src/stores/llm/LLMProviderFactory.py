@@ -21,7 +21,7 @@ class LLMProviderFactory:
             """
             Returns an instance of the specified LLM provider.
 
-            :param provider_name: Name of the LLM provider (e.g., 'COHERE', 'OPENAI').
+            :param provider_name: Name of the LLM provider (e.g., 'COHERE', 'OPENAI', 'GEMINI').
             :param configuration: A dictionary containing the configuration parameters for the provider.
             :return: An instance of the specified LLM provider.
             """ 

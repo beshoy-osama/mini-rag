@@ -29,6 +29,7 @@ class OPENAIProvider(LLMInterface):
             base_url = self.api_url
         )
 
+        self.enums = OPENAIEnums
         self.logger = logging.getLogger(__name__)
 
 
@@ -42,9 +43,10 @@ class OPENAIProvider(LLMInterface):
     def process_text(self, input_text: str):
         return input_text[:self.default_input_max_characters].strip()
 
-    def generate_text(self, prompt: str, chat_history: list = [], 
-                            max_output_tokens: int=None,
-                            temperature: float=None):
+    def generate_text(self, user_prompt: str, system_prompt: str = None,
+                            chat_history: list = None,
+                            max_output_tokens: int = None,
+                            temperature: float = None):
             
             if not self.client:
                 self.logger.error("OpenAI client is not initialized. Please check your API key and URL.")
@@ -58,13 +60,27 @@ class OPENAIProvider(LLMInterface):
 
             temperature = temperature if temperature is not None else self.default_generation_temperature
 
-            chat_history.append(
-                self.construct_prompt(prompt=prompt, role=OPENAIEnums.USER.value)
+            messages = list(chat_history or [])
+
+            if system_prompt:
+                messages.insert(
+                    0,
+                    self.construct_prompt(
+                        prompt=system_prompt,
+                        role=OPENAIEnums.SYSTEM.value
+                    )
+                )
+
+            messages.append(
+                self.construct_prompt(
+                    prompt=user_prompt,
+                    role=OPENAIEnums.USER.value
+                )
             )
 
             response = self.client.chat.completions.create(
                 model=self.generation_model_id,
-                messages=chat_history,
+                messages=messages,
                 max_tokens=max_output_tokens,
                 temperature=temperature
             )
@@ -107,5 +123,5 @@ class OPENAIProvider(LLMInterface):
 
         return {
             'role' : role,
-            'content' : self.process_text(input_text=prompt)
+            'content' : prompt.strip()
         }

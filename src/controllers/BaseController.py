@@ -27,8 +27,9 @@ class BaseController():
                 self.database_dir,
                 database_name
             )
-
-            os.makedirs(database_path, exist_ok=True)
+            
+            if not os.path.exists(database_path):
+                os.makedirs(database_path, exist_ok=True)
 
             return database_path
 

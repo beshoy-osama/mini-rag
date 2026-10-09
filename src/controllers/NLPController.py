@@ -1,17 +1,19 @@
 from .BaseController import BaseController
 from models.db_schemes import Project, DataChunk
 from stores.llm.LLMEnums import DocumentTypeEnums
+from stores.llm.templates import TemplateParser
 
 from typing import List
 import json
 
 class NLPController(BaseController):
 
-    def __init__(self, vector_DB_client, embedding_client, generation_client):
+    def __init__(self, vector_DB_client, embedding_client, generation_client, template_parser: TemplateParser):
         super().__init__()
         self.vector_DB_client = vector_DB_client
         self.embedding_client = embedding_client
         self.generation_client = generation_client
+        self.template_parser = template_parser
 
     def create_collection_name(self, project_id: str):
         """
@@ -68,14 +70,12 @@ class NLPController(BaseController):
                                                         embedding_size=self.embedding_client.embedding_size)
                 
         #step4: insert items into the collection
-        self.vector_DB_client.insert_many(
-                    collection_name=collection_name,
-                    vectors=vectors,
-                    texts=texts,
-                    metadatas=metadata
-                )
-
-        return True
+        return self.vector_DB_client.insert_many(
+            collection_name=collection_name,
+            vectors=vectors,
+            texts=texts,
+            metadatas=metadata
+        )
 
     def search_vectorDB_collection(self, project: Project, query_text: str, top_k: int = 5):
 
@@ -97,6 +97,51 @@ class NLPController(BaseController):
             top_k=top_k
         )
 
-        return json.loads(
-                    json.dumps(search_results, default=lambda x: x.__dict__)
-                    ) 
+        if not search_results:
+            return None
+
+        return search_results
+
+    def answer_rag_question(self, project: Project, query_text: str, top_k: int = 5):
+
+        retrieval_chunks = self.search_vectorDB_collection(
+            project=project,
+            query_text=query_text,
+            top_k=top_k
+        )
+
+        if not retrieval_chunks:
+            return None, [], None, None
+
+        system_prompt = self.template_parser.get(
+            group="rag",
+            key="system_prompt"
+        )
+
+        document_prompts = "\n".join([
+            self.template_parser.get(
+                group="rag",
+                key="document_prompt",
+                vars={
+                    "doc_num": doc_num,
+                    "chunk_text": result.text
+                }
+            )
+            for doc_num, result in enumerate(retrieval_chunks, start=1)
+        ])
+
+        user_prompt = self.template_parser.get(
+            group="rag",
+            key="user_prompt",
+            vars={
+                "documents": document_prompts,
+                "query": query_text
+            }
+        )
+
+        answer = self.generation_client.generate_text(
+            user_prompt=user_prompt,
+            system_prompt=system_prompt
+        )
+
+        return answer, retrieval_chunks, user_prompt, system_prompt

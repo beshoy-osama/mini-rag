@@ -21,6 +21,7 @@ class COHEREProvider(LLMInterface):
                 self.embedding_model_id = None
                 self.embedding_size = None
 
+                self.enums = COHEREEnums
                 self.client = cohere.ClientV2(
                         api_key = self.api_key
                 )
@@ -38,9 +39,10 @@ class COHEREProvider(LLMInterface):
         def process_text(self, input_text: str):
             return input_text[:self.default_input_max_characters].strip()
 
-        def generate_text(self, prompt: str, chat_history: list = [] , 
-                        max_output_tokens: int=None,
-                        temperature: float=None):
+        def generate_text(self, user_prompt: str, system_prompt: str = None,
+                        chat_history: list = None,
+                        max_output_tokens: int = None,
+                        temperature: float = None):
 
             if not self.client:
                 self.logger.error("COHERE client is not initialized. Please check your API key and URL.")
@@ -54,13 +56,27 @@ class COHEREProvider(LLMInterface):
 
             temperature = temperature if temperature is not None else self.default_generation_temperature
 
-            chat_history.append(
-                self.construct_prompt(prompt=prompt, role=COHEREEnums.USER.value)
+            messages = list(chat_history or [])
+
+            if system_prompt:
+                messages.insert(
+                    0,
+                    self.construct_prompt(
+                        prompt=system_prompt,
+                        role=COHEREEnums.SYSTEM.value
+                    )
+                )
+
+            messages.append(
+                self.construct_prompt(
+                    prompt=user_prompt,
+                    role=COHEREEnums.USER.value
+                )
             )
 
             response = self.client.chat(
                     model=self.generation_model_id,
-                    messages=chat_history,
+                    messages=messages,
                     max_tokens=max_output_tokens,
                     temperature=temperature
             )
@@ -114,5 +130,5 @@ class COHEREProvider(LLMInterface):
 
             return {
             'role' : role,
-            'content' : self.process_text(input_text=prompt)
+            'content' : prompt.strip()
         }

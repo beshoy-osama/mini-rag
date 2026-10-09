@@ -29,9 +29,13 @@ class Settings(BaseSettings):
     GENERATION_DAFAULT_MAX_TOKENS: int 
     GENERATION_DAFAULT_TEMPERATURE: float 
 
-    VectorDB_Backend : str
-    VectorDB_path : str
-    VectorDB_DistanceMethod : str = None
+    VECTORDB_BACKEND : str
+    VECTORDB_PATH : str
+    VECTORDB_DISTANCE_METHOD : str = None
+
+    DEFAULT_LANGUAGE: str 
+    ENGLISH_LANGUAGE: str 
+    ARABIC_LANGUAGE: str 
 
 
     
