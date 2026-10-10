@@ -31,10 +31,6 @@ $ conda activate mini-rag
 export PS1="\[\033[01;32m\]\u@\h:\w\n\[\033[00m\]\$ "
 ```
 
-### (Optional) Run Ollama Local LLM Server using Colab + Ngrok
-
-- Check the [notebook](https://colab.research.google.com/drive/1KNi3-9KtP-k-93T3wRcmRe37mRmGhL9p?usp=sharing) + [Video](https://youtu.be/-epZ1hAAtrs)
-
 ## Installation
 
 ### Install the required packages
