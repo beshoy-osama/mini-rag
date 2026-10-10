@@ -1,0 +1,67 @@
+# Environment files and local secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+.envrc
+.streamlit/secrets.toml
+
+# Python virtual environments, caches, and build output
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Local databases, vector indexes, uploads, and Docker data
+*.db
+*.sqlite
+*.sqlite3
+docker/mongodb/
+src/assets/database/
+src/assets/files/
+mongodb/
+database/
+
+# Logs and local runtime files
+*.log
+*.pid
+
+# Certificates and private keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# OS and editor-local files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*.code-workspace
+.vscode/*.[lL]ocal.*
+/.vscode
+
+# Local tool and test files
+.postman/
+postman/documents/
+postman/environments/
+postman/flows/
+postman/mocks/
+postman/specs/
+tempCodeRunnerFile.py
+
+/docs for test rag
+
+tests

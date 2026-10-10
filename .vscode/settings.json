@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "/home/besho/miniconda3/envs/mini-rag-app/bin/python",
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python.analysis.autoImportCompletions": true,
+    "python.languageServer": "Pylance"
+}

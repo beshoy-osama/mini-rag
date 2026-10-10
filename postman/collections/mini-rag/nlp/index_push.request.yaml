@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{url}}/api/v1/nlp/index/push/1"
+method: POST
+body:
+  type: json
+  content: "{\r\n    \"do_reset\" : 1\r\n}"
+order: 1790699637313

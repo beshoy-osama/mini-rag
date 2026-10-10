@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{url}}/api/v1/data/upload/1"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src:
+        - /C:/Users/besho/OneDrive/Desktop/random files/Cvs/Ducuments.txt
+      description: ""
+      disabled: false
+order: 1790699619084

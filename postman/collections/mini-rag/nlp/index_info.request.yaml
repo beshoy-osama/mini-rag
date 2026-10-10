@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{url}}/api/v1/nlp/index/push/1"
+method: GET
+body:
+  type: json
+  content: "{\r\n    \r\n}"
+order: 2384791138746574
