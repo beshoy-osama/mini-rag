@@ -26,7 +26,7 @@ class OPENAIProvider(LLMInterface):
 
         self.client = OpenAI(
             api_key = self.api_key,
-            base_url = self.api_url
+            base_url = self.api_url if self.api_url else None
         )
 
         self.enums = OPENAIEnums
@@ -78,12 +78,16 @@ class OPENAIProvider(LLMInterface):
                 )
             )
 
-            response = self.client.chat.completions.create(
-                model=self.generation_model_id,
-                messages=messages,
-                max_tokens=max_output_tokens,
-                temperature=temperature
-            )
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.generation_model_id,
+                    messages=messages,
+                    max_tokens=max_output_tokens,
+                    temperature=temperature
+                )
+            except Exception as e:
+                self.logger.error(f"OpenAI API Error ({self.api_url}): {str(e)}")
+                return None
 
             if not response or not response.choices or len(response.choices) == 0 or not response.choices[0].message:
                 self.logger.error("Error while generating text with OpenAI")
